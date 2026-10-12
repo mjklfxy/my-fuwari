@@ -4,6 +4,8 @@ updates:
     directory: "/"
     schedule:
       interval: "daily"
+    # 暂停 Dependabot：0 = 不再自动开升级 PR（想恢复时删掉这行或改成 5）
+    open-pull-requests-limit: 0
     groups:
       patch-updates:
         patterns:
