@@ -4,6 +4,7 @@ import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
 
 import ConfigCarrier from "@components/ConfigCarrier.astro";
+import GlobalStyles from "@components/GlobalStyles.astro";
 import { profileConfig, siteConfig } from "@/config";
 import {
 	AUTO_MODE,
@@ -77,6 +78,7 @@ const bannerOffset =
 	  data-overlayscrollbars-initialize
 >
 	<head>
+		<GlobalStyles />
 
 		<title>{pageTitle}</title>
 
