@@ -1,0 +1,2 @@
+# Match Biome's line endings on Windows and Linux without converting binary files.
+* text=auto eol=lf

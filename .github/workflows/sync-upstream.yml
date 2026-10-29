@@ -1,0 +1,68 @@
+name: Sync upstream template
+
+on:
+  schedule:
+    - cron: "23 22 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  actions: write
+
+concurrency:
+  group: sync-upstream-template
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main with merge history
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          ref: main
+          fetch-depth: 0
+      - name: Merge upstream changes
+        id: merge
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git fetch https://github.com/saicaca/fuwari.git main:refs/remotes/template/main
+          if git merge-base --is-ancestor template/main HEAD; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          # A normal merge preserves local customizations and stops on conflicts.
+          git merge --no-ff --no-edit template/main
+          echo "changed=true" >> "$GITHUB_OUTPUT"
+      - name: Setup Node.js
+        if: steps.merge.outputs.changed == 'true'
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: 22
+      - name: Setup pnpm
+        if: steps.merge.outputs.changed == 'true'
+        uses: pnpm/action-setup@a7487c7e89a18df4991f7f222e4898a00d66ddda # v4.1.0
+      - name: Install locked dependencies
+        if: steps.merge.outputs.changed == 'true'
+        run: pnpm install --frozen-lockfile
+      - name: Check quality, types, and production build
+        if: steps.merge.outputs.changed == 'true'
+        run: |
+          pnpm exec biome ci ./src --reporter=github
+          pnpm check
+          pnpm build
+      - name: Push validated merge
+        if: steps.merge.outputs.changed == 'true'
+        run: git push origin HEAD:main
+      - name: Trigger checks and deployment
+        if: steps.merge.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          # GITHUB_TOKEN pushes do not trigger push workflows; dispatch them explicitly.
+          gh workflow run biome.yml --ref main
+          gh workflow run build.yml --ref main
+          gh workflow run deploy.yml --ref main

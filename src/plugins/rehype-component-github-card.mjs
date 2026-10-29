@@ -2,12 +2,12 @@
 import { h } from "hastscript";
 
 /**
- * Creates a GitHub Card component.
+ * Creates a GitHub repository card for a leaf directive with an owner/repo name.
  *
  * @param {Object} properties - The properties of the component.
  * @param {string} properties.repo - The GitHub repository in the format "owner/repo".
- * @param {import('mdast').RootContent[]} children - The children elements of the component.
- * @returns {import('mdast').Parent} The created GitHub Card component.
+ * @param {import('hast').ElementContent[]} children - Child nodes, rejected for this leaf directive.
+ * @returns {import('hast').Element} The repository card or a hidden validation message.
  */
 export function GithubCardComponent(properties, children) {
 	if (Array.isArray(children) && children.length !== 0)
@@ -15,7 +15,7 @@ export function GithubCardComponent(properties, children) {
 			'Invalid directive. ("github" directive must be leaf type "::github{repo="owner/repo"}")',
 		]);
 
-	if (!properties.repo || !properties.repo.includes("/"))
+	if (!properties.repo?.includes("/"))
 		return h(
 			"div",
 			{ class: "hidden" },

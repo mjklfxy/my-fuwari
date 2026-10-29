@@ -3,11 +3,11 @@
  */
 import { definePlugin } from "@expressive-code/core";
 
+/** Displays the code language on blocks without a title, hiding it while copy controls are active. */
 export function pluginLanguageBadge() {
 	return definePlugin({
 		name: "Language Badge",
-		// @ts-expect-error
-		baseStyles: ({ _cssVar }) => `
+		baseStyles: () => `
       [data-language]::before {
         position: absolute;
         z-index: 2;
