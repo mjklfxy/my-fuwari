@@ -39,7 +39,7 @@
     "katex": "^0.19.0",
     "markdown-it": "^14.3.2",
     "mdast-util-to-string": "^4.0.0",
-    "overlayscrollbars": "^2.16.0",
+    "overlayscrollbars": "^2.17.0",
     "pagefind": "^1.5.2",
     "photoswipe": "^5.4.4",
     "reading-time": "^1.5.0",
@@ -58,12 +58,12 @@
     "svelte": "^5.57.2",
     "tailwindcss": "^3.4.19",
     "typescript": "^5.9.3",
-    "unist-util-visit": "^5.1.0"
+    "unist-util-visit": "^5.2.0"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.10",
     "@astrojs/ts-plugin": "^1.10.12",
-    "@biomejs/biome": "2.5.15",
+    "@biomejs/biome": "2.6.3",
     "@rollup/plugin-yaml": "^4.1.2",
     "@types/hast": "^3.0.5",
     "@types/markdown-it": "^14.2.0",
